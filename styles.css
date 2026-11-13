@@ -1,0 +1,102 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+
+}
+body {
+    background-color: #00F0FF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    
+    
+}
+.calculator {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #0D0221;
+    width: 350px;
+    height: 500px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 25px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-bottom: 10px;
+    
+}
+.leftSide{
+    width: 75%;
+    
+}
+
+.rightSide{
+    width: 25%;
+}
+
+button {
+    background-color: #1D1135;
+    color: #00F0FF;
+    flex-wrap: wrap;
+    width: 70px;
+    height: 70px;
+    border: 2px solid #0D0221;
+    border-radius: 8px;
+
+    font-weight: bold;
+    font-size:medium
+}
+
+
+
+#zero {
+    width: 140px;
+}
+
+#is {
+    height: 140px;
+}
+.display {
+    display: flex;
+    background-color: #070F34;
+    width: 80%;
+    height: 60px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.display > p{
+    color:#00F0FF;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.operator {
+    background-color:  #FF007F;
+    color: #FFFFFF; 
+}
+
+.restbtn {
+    background-color: #FCEE09;
+    color: #0D0221;
+
+}
+
+/*
+Calculator Body	Deep Void Blue	#0D0221	Main chassis or app background
+Display Screen	Midnight Indigo	#070F34	Recessed screen background
+Display Text	Electric Cyan	#00F0FF	Add a subtle text-shadow glow
+Number Buttons	Dark Slate Purple	#1D1135	Use #00F0FF (cyan) for the numbers
+Operator Buttons	Neon Magenta	#FF007F	For +, -, ×, ÷ with #FFFFFF text
+Equals / Clear (= / C)	Laser Yellow	#FCEE09	High-contrast action button with #0D0221 text
+ */
