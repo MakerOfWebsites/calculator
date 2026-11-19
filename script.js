@@ -1,7 +1,3 @@
-let firstNumber;
-let operator;
-let secondNumber;
-
 function add(a, b){
     return a + b;
 }
@@ -30,100 +26,167 @@ function operate(firstNumber, operator, secondNumber){
     }
 }
 
-let firstNumbers = [];
-let secondNumbers = [];
-let result;
-
 let buttons  = document.querySelectorAll("button");
 let displayText = document.querySelector(".displayText");
+let isCalculated = false;
 
+document.addEventListener("keydown", (event) => {
+    let value = event.key;
+
+     let equalsSign = "Enter";
+        
+       if(isCalculated &&  (+value || value === "0" || value === ".")){
+
+        numberPressedAfterCalc()
+       }
+
+       if(sum.operator === "" && 
+        (+value || value === "0" || (value === "." && !sum.firstNumber.includes(".")))){
+        getFirstNum(value);
+        }
+
+        getOperator(value);
+        getSecondNum(value);
+        getResult(value, equalsSign);
+        getResultOnOperator(value);
+
+        if(value === "Backspace"){
+             backspace();
+        }
+
+        if(value === "Delete"){
+            allClear();
+        }
+
+        console.log(sum.firstNumber, sum.operator, sum.secondNumber, sum.result )
+ })
 
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
         let value = button.textContent;
         let equalsSign = "=";
+        
+       if(isCalculated && sum.operator === "" && (+value || value === "0" || value === ".")){
+        numberPressedAfterCalc()
+        console.log("its this again");
+       }
 
+       if(sum.operator === "" && 
+        (+value || value === "0" || (value === "." && !sum.firstNumber.includes(".")))){
         getFirstNum(value);
+        }
+
         getOperator(value);
         getSecondNum(value);
         getResult(value, equalsSign);
         getResultOnOperator(value);
-        allClear(value);
 
-        console.log(sum.firstNumber, sum.operator, sum.secondNumber);
-        console.log("result " + operate(sum.firstNumber, sum.operator, sum.secondNumber))  
+        if(value === "DEL"){
+             backspace();
+        }
+
+        if(value === "C"){
+            allClear();
+        }
+
+        console.log(sum.firstNumber, sum.operator, sum.secondNumber, sum.result )
     });
-} )
+} );
 
-function getFirstNum(value){
-    if(typeof sum.operator === "undefined" && (+value || value === "0")){
-            sum.firstNumber = Number(getNum(value, firstNumbers));
+   function  handlerZeroDivision(){
+        if(sum.operator === "/" && sum.secondNumber === 0){
+            allClear();
+            return displayText.textContent = "NaN";
+        }
+    }
 
-            displayText.textContent = sum.firstNumber;
-         }
+function numberPressedAfterCalc(){
+        allClear();
+        isCalculated = false;
 }
 
+function getFirstNum(value){
+            sum.firstNumber += value;
+            displayText.textContent = sum.firstNumber; 
+}
+
+function backspace(){
+    console.log(displayText.textContent + " " + sum.firstNumber) 
+    if(displayText.textContent === sum.firstNumber){
+         sum.firstNumber = sum.firstNumber.slice(0, -1);
+        displayText.textContent = sum.firstNumber;
+        }
+
+    else if(displayText.textContent === sum.secondNumber){
+         sum.secondNumber = sum.secondNumber.slice(0, -1);
+        displayText.textContent = sum.secondNumber;
+    }
+}   
+
 function getOperator(value){
-     if(typeof sum.firstNumber !== "undefined" && typeof sum.operator === "undefined" && Object.values(operators).some(operator => operator === value)){
+     if(sum.firstNumber !== "" && 
+        sum.operator === "" && 
+        Object.values(operators).some(operator => operator === value)){
             sum.operator = value;       
         } 
 }
 
 function getSecondNum(value){
-     if(typeof sum.firstNumber !== "undefined" && typeof sum.operator !== "undefined" && (+value || value === "0" || value === ".")){
-           sum.secondNumber = Number(getNum(value,secondNumbers));  
-
+     if(sum.firstNumber !== "" && 
+        sum.operator !== "" && 
+        (+value || value === "0" || (value === "." && !sum.secondNumber.includes(".")))){
+           sum.secondNumber += value;  
            displayText.textContent = sum.secondNumber;
         }
 }
 
 function getResult(value, operator){
-       if(typeof sum.firstNumber !== "undefined" && typeof sum.secondNumber !== "undefined" && typeof sum.operator !== "undefined" && value === operator){
-            let result = operate(sum.firstNumber, sum.operator, sum.secondNumber);
-            sum.firstNumber = result;
-            sum.operator = undefined;
-            sum.secondNumber = undefined; 
-            firstNumbers = []
-            secondNumbers = [];
-            
-            displayText.textContent = result;
+       if(sum.firstNumber !== "" && 
+        sum.secondNumber !== "" && 
+        sum.operator !== "" && 
+        value === operator){
+            sum.result = operate(Number(sum.firstNumber), sum.operator, Number(sum.secondNumber));
+            if(handlerZeroDivision()){
+                return;
+            } 
+            sum.firstNumber = sum.result
+            sum.operator = "";
+            sum.secondNumber = "";       
+            displayText.textContent = sum.result;
+            isCalculated = true;
         }
 }
+
 
 function getResultOnOperator(value){
-       if(typeof sum.firstNumber !== "undefined" && typeof sum.secondNumber !== "undefined" && Object.values(operators).some(operator => operator === value)){
-             let result = operate(sum.firstNumber, sum.operator, sum.secondNumber);
+       if(sum.firstNumber !== "" && sum.secondNumber !== "" && Object.values(operators).some(operator => operator === value)){
+             sum.result= operate(Number(sum.firstNumber), sum.operator, Number(sum.secondNumber));
+             if(handlerZeroDivision()){
+                return;
+             }
              sum.operator = value;
-             sum.firstNumber = result;
-             sum.secondNumber = undefined;
-             firstNumbers = [];
-             secondNumbers = [];
+             sum.firstNumber = sum.result;
+             sum.secondNumber = "";
 
-             displayText.textContent= result;
+             displayText.textContent = sum.result;
+             isCalculated = true;
         }
 }
 
-function allClear(value){
-    if(value === "C"){
-        sum.firstNumber = undefined;
-        sum.operator = undefined;
-        sum.secondNumber = undefined;
-        firstNumbers = [];
-        secondNumbers= [];
+function allClear(){
+        sum.firstNumber = "";
+        sum.operator = "";
+        sum.secondNumber = "";
+        sum.result = "";
         displayText.textContent = 0;
-    }
-}
-
-
- function getNum(num, array) {
-        array.push(num);
-        return array.join("");
+        isCalculated = false;
 }
 
 let sum = {
-    firstNumber: undefined,
-    operator: undefined,
-    secondNumber: undefined
+    firstNumber: "",
+    operator: "",
+    secondNumber:"",
+    result:""
 }
 
 const operators = {
@@ -132,6 +195,3 @@ const operators = {
     divide: "/",
     subtract: "-",
 }
-
-
-
